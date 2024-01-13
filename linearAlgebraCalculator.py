@@ -71,7 +71,7 @@ class Matrix:
 
     # Add a constant to a mtrix.
     def add_constant(self, c):
-        if not c.isinstance(float):
+        if not isinstance(c, float) and not isinstance(c, int):
             raise TypeError("That's not a number!")
         for i in range(self.r):
             for j in range(self.c):
@@ -115,9 +115,9 @@ class Matrix:
     # Determine if a matrix is invertible, using the determinant to check.
     def invertible(self):
         if len(self.matrix) != len(self.matrix[0]):
-            raise ValueError("Matrix is not invertible.")
+            raise ValueError("Matrix must be nxn.")
         if self.determinant() == 0:
-            raise ValueError("Matrix is not invertible.")
+            return False
         else:
             return True
         
@@ -179,4 +179,26 @@ class Matrix:
 
     # Prints the matrix itself when called.
     def __repr__(self):
-        return str(self.matrix)
+       	return str(self.matrix)
+
+    # Magic method to support addition
+    def __add__(self, other):
+        if isinstance(other, Matrix):
+            return self.addition(other)
+        elif isinstance(other, int):
+            return self.add_constant(other)
+
+    # Magic method to support subtraction
+    def __sub__(self, other):
+        if isinstance(other, Matrix):
+            return self.subtraction(other)
+        elif isinstance(other, int):
+            return self.add_constant(-other)
+
+    # Magic method to support constant multiplication
+    def __mul__(self, other):
+        if isinstance(other, int):
+            return self.mul_constant(other)
+
+    __rmul__ = __mul__
+    __lmul__ = __mul__
